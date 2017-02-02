@@ -16,7 +16,7 @@
   # 2) Try to load Archive::Tar::Minitar from $LOAD_PATH.
 begin
   require 'rubygems'
-  require_gem 'archive-tar-minitar', '= 0.5.2'
+  require_gem 'archive-tar-minitar', '= 0.5.2.1'
 rescue LoadError
   nil
 end

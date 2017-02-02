@@ -12,6 +12,8 @@
 # $Id: minitar.rb 213 2008-02-26 22:32:11Z austin $
 #++
 
+require 'archive/tar/minitar/version'
+
 module Archive; end
 module Archive::Tar; end
 
@@ -331,7 +333,7 @@ module Archive::Tar::Minitar
       header = { :name => name, :mode => opts[:mode], :mtime => opts[:mtime],
         :size => opts[:size], :gid => opts[:gid], :uid => opts[:uid],
         :prefix => prefix }
-      header = Archive::Tar::PosixHeader.new(header).to_s 
+      header = Archive::Tar::PosixHeader.new(header).to_s
       @io.write(header)
 
       os = BoundedStream.new(@io, opts[:size])
@@ -454,8 +456,8 @@ module Archive::Tar::Minitar
       def getc; raise ClosedStream;  end
       def rewind; raise ClosedStream;  end
     end
-      
-      # EntryStreams are pseudo-streams on top of the main data stream.
+
+    # EntryStreams are pseudo-streams on top of the main data stream.
     class EntryStream
       Archive::Tar::PosixHeader::FIELDS.each do |field|
         attr_reader field.intern
@@ -483,8 +485,8 @@ module Archive::Tar::Minitar
         @orig_pos = @io.pos
       end
 
-        # Reads +len+ bytes (or all remaining data) from the entry. Returns
-        # +nil+ if there is no more data to read.
+      # Reads +len+ bytes (or all remaining data) from the entry. Returns
+      # +nil+ if there is no more data to read.
       def read(len = nil)
         return nil if @read >= @size
         len ||= @size - @read
@@ -494,8 +496,8 @@ module Archive::Tar::Minitar
         ret
       end
 
-        # Reads one byte from the entry. Returns +nil+ if there is no more data
-        # to read.
+      # Reads one byte from the entry. Returns +nil+ if there is no more data
+      # to read.
       def getc
         return nil if @read >= @size
         ret = @io.getc
@@ -503,30 +505,30 @@ module Archive::Tar::Minitar
         ret
       end
 
-        # Returns +true+ if the entry represents a directory.
+      # Returns +true+ if the entry represents a directory.
       def directory?
         @typeflag == "5"
       end
       alias_method :directory, :directory?
 
-        # Returns +true+ if the entry represents a plain file.
+      # Returns +true+ if the entry represents a plain file.
       def file?
         @typeflag == "0"
       end
       alias_method :file, :file?
 
-        # Returns +true+ if the current read pointer is at the end of the
-        # EntryStream data.
+      # Returns +true+ if the current read pointer is at the end of the
+      # EntryStream data.
       def eof?
         @read >= @size
       end
 
-        # Returns the current read pointer in the EntryStream.
+      # Returns the current read pointer in the EntryStream.
       def pos
         @read
       end
 
-        # Sets the current read pointer to the beginning of the EntryStream.
+      # Sets the current read pointer to the beginning of the EntryStream.
       def rewind
         raise NonSeekableStream unless @io.respond_to?(:pos=)
         @io.pos = @orig_pos
@@ -537,7 +539,7 @@ module Archive::Tar::Minitar
         @read
       end
 
-        # Returns the full and proper name of the entry.
+      # Returns the full and proper name of the entry.
       def full_name
         if @prefix != ""
           File.join(@prefix, @name)
@@ -546,7 +548,7 @@ module Archive::Tar::Minitar
         end
       end
 
-        # Closes the entry.
+      # Closes the entry.
       def close
         invalidate
       end
@@ -557,11 +559,11 @@ module Archive::Tar::Minitar
       end
     end
 
-      # With no associated block, +Reader::open+ is a synonym for
-      # +Reader::new+. If the optional code block is given, it will be passed
-      # the new _writer_ as an argument and the Reader object will
-      # automatically be closed when the block terminates. In this instance,
-      # +Reader::open+ returns the value of the block.
+    # With no associated block, +Reader::open+ is a synonym for
+    # +Reader::new+. If the optional code block is given, it will be passed
+    # the new _writer_ as an argument and the Reader object will
+    # automatically be closed when the block terminates. In this instance,
+    # +Reader::open+ returns the value of the block.
     def self.open(anIO)
       reader = Reader.new(anIO)
 
@@ -572,7 +574,7 @@ module Archive::Tar::Minitar
       ensure
         reader.close
       end
-      
+
       res
     end
 
@@ -894,7 +896,7 @@ module Archive::Tar::Minitar
       else
         name = entry
       end
-      
+
       name = name.sub(%r{\./}, '')
       stat = File.stat(name)
       stats[:mode]   ||= stat.mode

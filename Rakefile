@@ -2,8 +2,9 @@
 $LOAD_PATH.unshift('lib')
 
 require 'rubygems'
-require 'rake/gempackagetask'
-require 'rake/contrib/rubyforgepublisher'
+require "bundler/gem_tasks"
+# require 'rake/gempackagetask'
+# require 'rake/contrib/rubyforgepublisher'
 require 'archive/tar/minitar'
 require 'zlib'
 
