@@ -225,7 +225,7 @@ require 'find'
   # modified under the terms of the GPL version 2 (or later) or Ruby's
   # licence.
 module Archive::Tar::Minitar
-  VERSION = "0.5.2"
+  VERSION = "0.5.2.1"
 
     # The exception raised when a wrapped data stream class is expected to
     # respond to #rewind or #pos but does not.
@@ -969,6 +969,9 @@ module Archive::Tar::Minitar
         end
 
         inp.each do |entry|
+          if entry.full_name.squeeze('/') =~ /\.{2}(?:\/|\z)/
+            raise entry.full_name + " Error path contains .."
+          end
           if files.empty? or files.include?(entry.full_name)
             inp.extract_entry(dest, entry, &block)
           end
